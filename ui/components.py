@@ -1,5 +1,8 @@
 import pygame
 from globals import *
+from random import randint, random
+from copy import deepcopy
+
 pygame.font.init()
 FONT = pygame.font.SysFont(None, 30)
 
@@ -67,7 +70,7 @@ class Grid:
                     return r, c
         return None
 
-    def solve(self):
+    def solve(self, rw=None):
         empty = self.find_empty()
         if not empty:
             return True
@@ -75,10 +78,34 @@ class Grid:
         for num in range(1, 10):
             if self.is_valid(num, empty):
                 self.grid[rm][cm].val = num
-                if self.solve():
+                if rw:
+                    self.grid[rm][cm].select()
+                    rw()
+                    pygame.time.delay(60)
+                if self.solve(rw):
+                    if rw:
+                        self.grid[rm][cm].select()
                     return True
                 self.grid[rm][cm].val = None
+                if rw:
+                    self.grid[rm][cm].select()
+                    rw()
+                    pygame.time.delay(60)
         return False
+
+    def generate_game(self):
+        while True:
+            self.reset()
+            for r in range(self.dim):
+                for c in range(self.dim):
+                    if random() < .5:
+                        num = randint(1, 10)
+                        if self.is_valid(num, (r, c)):
+                            self.grid[r][c].val = num
+            grid = deepcopy(self.grid)
+            if self.solve():
+                self.grid = grid
+                return
 
     def reset(self):
         self.__init__()

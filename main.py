@@ -11,26 +11,6 @@ GRID = Grid()
 NUM_MAP = [eval(f"pygame.K_{i}") for i in range(0, 10)] + [eval(f"pygame.K_KP{i}") for i in range(0, 10)]
 
 
-def example():
-    example_board = [
-        [7, 8, 0, 4, 0, 0, 1, 2, 0],
-        [6, 0, 0, 0, 7, 5, 0, 0, 9],
-        [0, 0, 0, 6, 0, 1, 0, 7, 8],
-        [0, 0, 7, 0, 4, 0, 2, 6, 0],
-        [0, 0, 1, 0, 5, 0, 9, 3, 0],
-        [9, 0, 4, 0, 6, 0, 0, 0, 5],
-        [0, 7, 0, 3, 0, 0, 0, 1, 2],
-        [1, 2, 0, 0, 0, 7, 4, 0, 0],
-        [0, 4, 9, 2, 0, 6, 0, 0, 7]
-    ]
-    for i in range(9):
-        for j in range(9):
-            GRID.grid[i][j].val = example_board[i][j]
-
-
-example()
-
-
 def redraw_win():
     win.fill(white)
     GRID.draw(win)
@@ -57,9 +37,13 @@ def main():
                     else:
                         GRID.grid[rs][cs].val = None
                 elif event.key in [pygame.K_RETURN, pygame.K_KP_ENTER]:
-                    GRID.solve()
+                    solved = GRID.solve(redraw_win)
+                    if not solved:
+                        GRID.reset()
                 elif event.key == pygame.K_r:
                     GRID.reset()
+                elif event.key == pygame.K_g:
+                    GRID.generate_game()
         redraw_win()
     pygame.quit()
 
