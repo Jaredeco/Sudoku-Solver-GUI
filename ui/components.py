@@ -1,6 +1,5 @@
 import pygame
 from globals import *
-
 pygame.font.init()
 FONT = pygame.font.SysFont(None, 30)
 
@@ -24,8 +23,8 @@ class Grid:
         for r in range(self.dim):
             for c in range(self.dim):
                 self.grid[r][c].draw(win)
-        for r in range(0, 9, 3):
-            for c in range(0, 9, 3):
+        for r in range(0, self.dim, 3):
+            for c in range(0, self.dim, 3):
                 pygame.draw.rect(win, blue, (self.size * c, self.size * r, box_size * 3, box_size * 3), 1)
         if self.selected:
             rs, cs = self.selected
@@ -78,7 +77,7 @@ class Grid:
                 self.grid[rm][cm].val = num
                 if self.solve():
                     return True
-                self.grid[rm][cm].val = 0
+                self.grid[rm][cm].val = None
         return False
 
     def reset(self):
